@@ -1,0 +1,23 @@
+Package: CHIpower
+Title: Power dashboard for CHI
+Version: 0.1
+Authors@R: c(person('Randy', 'Johnson', email = 'Randall.Johnson@nih.gov',
+                    role = c('cre','aut')))
+Description: Dashboard for exploring power considerations for CHI projects.
+License: MIT + file LICENSE
+Depends: 
+  R (>= 4.0)
+Imports:
+  bslib,
+  cowplot,
+  dplyr,
+  ggplot2,
+  shiny,
+  shinymanager
+Suggests:
+    testthat (>= 3.0.0),
+    usethis
+Encoding: UTF-8
+URL: https://github.com/abcsFrederick/CHI-power
+BugReports: https://github.com/abcsFrederick/CHI-power/issues
+Language: en-US
