@@ -12,8 +12,8 @@ Imports:
   cowplot,
   dplyr,
   ggplot2,
-  shiny,
-  shinymanager
+  htmltools,
+  shiny
 Suggests:
     testthat (>= 3.0.0),
     usethis
@@ -21,3 +21,4 @@ Encoding: UTF-8
 URL: https://github.com/abcsFrederick/CHI-power
 BugReports: https://github.com/abcsFrederick/CHI-power/issues
 Language: en-US
+RoxygenNote: 7.2.3
