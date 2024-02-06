@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Power Considerations</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="PowerConsiderations_files/libs/clipboard/clipboard.min.js"></script>
+<script src="PowerConsiderations_files/libs/quarto-html/quarto.js"></script>
+<script src="PowerConsiderations_files/libs/quarto-html/popper.min.js"></script>
+<script src="PowerConsiderations_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="PowerConsiderations_files/libs/quarto-html/anchor.min.js"></script>
+<link href="PowerConsiderations_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="PowerConsiderations_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="PowerConsiderations_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="PowerConsiderations_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="PowerConsiderations_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Power Considerations</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>There are five general considerations that should be made when planning an experiment:</p>
+<ul>
+<li><a href="#sec-hypothesis">Hypothesis</a></li>
+<li><a href="#sec-significance-level-power">Significance level and Power</a></li>
+<li><a href="#sec-effect-size-variability">Effect size and Variability</a></li>
+<li><a href="#sec-data-statistical-analysis">Data to be collected and statistical analysis</a></li>
+<li><a href="#sec-sample-size">Sample size</a></li>
+</ul>
+<p>A discussion of these considerations is followed by a few <a href="#sec-examples">examples</a> that apply these considerations to the design of experiments.</p>
+<section id="sec-hypothesis" class="level2">
+<h2 class="anchored" data-anchor-id="sec-hypothesis">Hypothesis</h2>
+<p>The first and most important step in planning an experiment is to define the hypothesis. The hypothesis is a statement that can be statistically tested and is usually formed using a counterfactual. A clear hypothesis is essential for the design of the experiment and the accompanying power analysis, as it will guide sample selection, data collection, and the statistical analysis.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Counterfactual
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A counterfactual is a statement that describes what would have happened in the absence of a specific event or exposure. It is a fundamental concept in the design and analysis of experiments, as it allows us to compare what actually happened to what would have happened in the absence of the event or exposure. In other words, proper experimental design allows us to compare the observed outcome to the counterfactual outcome.</p>
+</div>
+</div>
+<p>Some examples of hypotheses include:</p>
+<ul>
+<li><p><em>Cell death increases with exposure to X.</em> In this case, the counterfactual is not explicitly stated. Rather, it is inferred that cell death would not increase in the absence of <em>X</em>. This hypothesis is easily tested by splitting a population of cells into two groups and exposing one group to <em>X</em>. We would then compare the mean cell death in the group exposed to <em>X</em> to the mean cell death in the group that was not exposed to <em>X</em>.</p></li>
+<li><p><em>The mean concentration of analyte, A, is increased in individuals with disease, D.</em> In this case, the counterfactual consists of the cases in a world where they hadn’t been exposed to disease, <em>D</em>. In other words, if they hadn’t been exposed to <em>D</em>, the mean concentration of analyte, <em>A</em>, would have remained at a lower level. While we will never be able to observe an individual in the counterfactual state (because it never happened), this hypothesis can be tested by comparing the mean concentration of analyte, <em>A</em>, in individuals with <em>D</em>, to the mean concentration of <em>A</em> in a control population of individuals without <em>D</em>. Ideally, the control population should be chosen to be as similar as possible to the population of individuals with <em>D</em>, except for the presence of <em>D</em>.</p></li>
+</ul>
+</section>
+<section id="sec-significance-level-power" class="level2">
+<h2 class="anchored" data-anchor-id="sec-significance-level-power">Significance level and Power</h2>
+<p>Significance level and power can be thought of in terms of errors. There are two types of errors that can be made in hypothesis testing:</p>
+<ol type="1">
+<li>Type I error: Rejecting the null hypothesis when it is true. This is controlled by the significance level, <span class="math inline">\(\alpha\)</span>.</li>
+<li>Type II error: Failing to reject the null hypothesis when it is false. This is controlled by the power, <span class="math inline">\(1 - \beta\)</span>.</li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Table 1. Type I and Type II errors. The significance level, α, controls the Type I error rate, while the power, 1 - β, controls the Type II error rate.</caption>
+<colgroup>
+<col style="width: 28%">
+<col style="width: 35%">
+<col style="width: 36%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Significant</th>
+<th style="text-align: left;">Not Significant</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Biologically Relevant</td>
+<td style="text-align: left;">True Positive</td>
+<td style="text-align: left;">False Negative (Type II error)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Biologically Irrelevant</td>
+<td style="text-align: left;">False Positive (Type I error)</td>
+<td style="text-align: left;">True Negative</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Power
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Statistical power is a function of the significance level, the effect size, the variability in the data, and the sample size. It is the probability of rejecting the null hypothesis when it is false. In other words, it can be thought of as the probability of correctly identifying a true effect given the biology and experimental design (assuming you know the true effect size and variability of the population you are sampling).</p>
+</div>
+</div>
+<section id="number-of-hypotheses" class="level3">
+<h3 class="anchored" data-anchor-id="number-of-hypotheses">Number of hypotheses</h3>
+<p>The number of hypothesis tests you run will affect the significance level and power. The more hypothesis tests you run, the more likely you are to make a Type I error. This is known as the multiple comparisons problem. There are several methods for controlling the Type I error rate when running multiple hypothesis tests, such as the Bonferroni correction. These methods control the family-wise error rate, which is the probability of making at least one Type I error when running multiple hypothesis tests. For example:</p>
+<ul>
+<li><em>Your favorite gene is differentially expressed in response to treatment A.</em> This is a focuses hypothesis and would require one hypothesis test. The family-wise error rate will be the same as the significance level, <span class="math inline">\(\alpha\)</span>.</li>
+<li><em>What genes are differentially expressed in response to treatment A?</em> This is typical of a hypothesis generating study and would require multiple hypothesis tests. The family-wise error rate will be significantly higher than the significance level, <span class="math inline">\(\alpha\)</span>, and will need to be controlled using a multiple comparisons correction.</li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Limiting the number of hypothesis tests you run is a good way to control the family-wise error rate and increase power. This can be done by focusing on a single hypothesis or perhaps a small number of related hypotheses. For example, focusing on a specific pathway or family of pathways can result in much higher power than a hypothesis generating study that tests 20,000 individual genes.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="sec-effect-size-variability" class="level2">
+<h2 class="anchored" data-anchor-id="sec-effect-size-variability">Effect size and Variability</h2>
+<p>Effect size and variability are inherent in the biological systems we study.</p>
+<p>Effect size is the magnitude of the difference between the observed population and the counterfactual population. In practice this is the true change that results from the exposure we are studying. In terms of our example hypotheses above, this would be the change in proportion of cells that die after exposure to <em>X</em>, compared to cells not exposed to <em>X</em>, or the change in mean concentration of <em>A</em> as a result of exposure to <em>D</em>.</p>
+<p>Variability is the spread of the data, usually measured by the standard deviation of the population. In the context of our first hypothesis above, this gives us a measure of how different our observed proportion of cells will survive from one assay to the next. For example, if the true effect size is a rate of 20% cell death and we expose batches of 100 cells to <em>X</em>, we won’t always observe 80 surviving cells. If the variability is low, then we’ll see something close to 80 surviving cells from one assay to the next, perhaps ranging between 75 and 85 across many assays. If the variability is high, however, we will see more variable results, perhaps ranging between 50 and 100 surviving cells over many assays.</p>
+<p>Estimates for effect size and variability can be obtained from the literature, pilot studies, or historical data. If these are not available, then the sample size will need to be large enough to detect a biologically relevant effect size with a reasonable degree of variability.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Effect size and variability stem from the biology, but there are still ways to increase power by reducing variability or increasing the effect size. For example:</p>
+<ul>
+<li>Variability can be reduced by using a more precise assay or by careful selection of samples (e.g.&nbsp;matched cases and controls)</li>
+<li>Effect size by sampling the extremes of the population or by using a more potent treatment.</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="sec-data-statistical-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="sec-data-statistical-analysis">Data to be collected and statistical analysis</h2>
+<p>The data to be collected and the statistical analysis used to test the hypothesis will depend on the hypothesis being tested. For example, in the case of the hypothesis, <em>Cell death increases with exposure to X</em>, the data to be collected would be the number of cells that die after exposure to <em>X</em> and the number of cells that die without exposure to <em>X</em>.</p>
+<p>The statistical analysis used to test the hypothesis will depend on the type of data collected. For example, if the data is continuous (e.g.&nbsp;concentration of a protein), then a t-test could be used. Care should be taken to collect the data that will be needed to complete the desired statistical analysis.</p>
+</section>
+<section id="sec-sample-size" class="level2">
+<h2 class="anchored" data-anchor-id="sec-sample-size">Sample size</h2>
+<p>The sample size is critical in hypothesis testing, in that it affects the standard error of the statistics used to perform the statistical test. The larger the sample size, the smaller the standard error and the more precise the estimate of the effect size. A larger sample will increase the power of the test. The sample size can be calculated using a power analysis. Power analysis is a method for determining the sample size needed to detect an effect of a given size with a given degree of variability and significance level.</p>
+<p>The sample size can also be determined by the resources available. For example, if the resources available only allow for a small sample size, then the effect size will need to be large and/or the variability will need to be small in order to detect a significant effect. If the resources available allow for a large sample size, then the effect size can be smaller and the variability greater while still being able to detect a significant effect.</p>
+</section>
+<section id="sec-examples" class="level2">
+<h2 class="anchored" data-anchor-id="sec-examples">Examples</h2>
+<section id="example-1-visually-exploring-power" class="level3">
+<h3 class="anchored" data-anchor-id="example-1-visually-exploring-power">Example 1: Visually exploring power</h3>
+<p>Given the hypothesis, <em>Cell death increases with exposure to X</em>, we will analyze the effect of these factors on power.</p>
+<ul>
+<li>Significance level, <span class="math inline">\(\alpha\)</span>: The significance level is the probability of making a Type I error. It is the probability of rejecting the null hypothesis when it is true. <span class="math inline">\(\alpha\)</span> is usually set at 0.05, but can be set to any value between 0 and 1. The smaller the significance level, the smaller the probability of making a Type I error, but the larger the probability of making a Type II error.</li>
+<li>Cell death rates (effect size): In the context of our experiment, the effect size is the magnitude of the difference between the effect of <em>X</em> on cell death. It is the biological difference between cells exposed to <em>X</em> and those same cells that were counterfactually not exposed to <em>X</em>. It is the expected difference in cell death rates between the exposed and unexposed groups. Set the left slider to the effect size of the unexposed group and the right slider to the effect size of the exposed group. The difference between the two sliders is the effect size.</li>
+<li>Variability: The variability in our experiment is a measure of the standard deviation of the observed proportion of cells that die over many assays. We will assume both the exposed and unexposed groups have the same variability. In this example, the variability can be decreased by using a more precise assay (perhaps by including more cells in each assay).</li>
+<li>Sample size (per group): In the context of our hypothesis, the statistics we are calculating are the observed difference in the proportion of cell death in exposed and in unexposed cells. The more assays we run (the sample size), the smaller the standard error of our statistics and the larger the power.</li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Low variability, low sample size
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The default values above let us explore the scenario where the variability is low (0.1), and the sample size is low (5). We see the distribution of cell death rates and the distribution of cell death rate statistics. If the assumptions we have made hold true, this results in 61% power to detect the effect size of 0.2. How many samples would we need to achieve at least 80% power?</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+High variability, larger sample size
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>What if the variability is high (0.5)? This assumes that the variability of our assay is high. We can balance this by increasing the sample size. What sample size would we need in this case to achieve at least 80% power?</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+High variability, larger effect size
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>In the case where assay variability is high (0.5), and the sample size is low (5), we may be able increase the effect size by increasing the dose of the exposure. What effect size would we need to achieve at least 80% power?</p>
+</div>
+</div>
+</div>
+<div class="panel-grid layout-sidebar ms-md-0 layout-sidebar-left">
+<div class="cell panel-sidebar card bg-light p-2 g-col-24 g-col-lg-7">
+<div class="cell-output-display">
+<div class="form-group shiny-input-container">
+<label class="control-label" id="typeI_error-label" for="typeI_error">Significance level</label>
+<input class="js-range-slider" id="typeI_error" data-skin="shiny" data-min="0.001" data-max="0.1" data-from="0.05" data-step="0.001" data-grid="true" data-grid-num="9.9" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number">
+</div>
+</div>
+<div class="cell-output-display">
+<div class="form-group shiny-input-container">
+<label class="control-label" id="p-label" for="p">Cell death rates (unexposed / exposed)</label>
+<input class="js-range-slider" id="p" data-skin="shiny" data-type="double" data-min="0" data-max="1" data-from="0.2" data-to="0.4" data-step="0.01" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-drag-interval="true" data-data-type="number">
+</div>
+</div>
+<div class="cell-output-display">
+<div class="form-group shiny-input-container">
+<label class="control-label" id="variability-label" for="variability">Variability</label>
+<input class="js-range-slider" id="variability" data-skin="shiny" data-min="0" data-max="1" data-from="0.1" data-step="0.01" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number">
+</div>
+</div>
+<div class="cell-output-display">
+<div class="form-group shiny-input-container">
+<label class="control-label" id="n-label" for="n">Sample size</label>
+<input id="n" type="number" class="shiny-input-number form-control" value="5" min="2">
+</div>
+</div>
+</div>
+<div class="panel-fill panel-grid g-col-24 g-col-lg-17 pt-3 pt-lg-0">
+<div class="g-col-24">
+<div class="cell panel-fill">
+<div class="cell-output-display">
+<div class="shiny-plot-output html-fill-item" id="cell_death_rates" style="width:100%;height:400px;"></div>
+</div>
+<div class="cell-output-display">
+<div class="shiny-plot-output html-fill-item" id="power" style="width:100%;height:400px;"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="example-2-exploring-the-effect-of-multiple-hypotheses" class="level3">
+<h3 class="anchored" data-anchor-id="example-2-exploring-the-effect-of-multiple-hypotheses">Example 2: Exploring the effect of multiple hypotheses</h3>
+<p>
+<script type="application/shiny-prerendered" data-context="server-start">
+library(knitr)
+library(dplyr)
+library(ggplot2)
+library(RColorBrewer)
+library(cowplot)
+theme_set(theme_cowplot())
+
+source('PowerConsiderations.R')
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+# distribution of cell death rates
+params_u <- reactive({calc_ab(input$p[1], variability = input$variability)})
+params_e <- reactive({calc_ab(input$p[2], variability = input$variability)})
+
+output$cell_death_rates <- renderPlot(
+  {
+    data.frame(x = c(0.01, 0.99)) |>
+
+      ggplot(aes(x)) +
+      stat_function(fun = dbeta, 
+                    args = list(shape1 = params_u()[1], 
+                                shape2 = params_u()[2]),
+                    color = brewer.pal(3, 'Set1')[2]) +
+      stat_function(fun = dbeta, 
+                    args = list(shape1 = params_e()[1], 
+                                shape2 = params_e()[2]),
+                    color = brewer.pal(3, 'Set1')[1]) +
+  
+      labs(y = '', x = 'Cell death rate', title = 'Distribution of cell death rates (truth / hidden)')
+  })
+
+
+# distribution of cell death rate statistics
+output$power <- renderPlot({plot_beta_stats(input$p[1], params_u(), input$p[2], params_e(), input$n, input$typeI_error)})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server-extras">
+ojs_define <- function(..., .session = shiny::getDefaultReactiveDomain()) {
+  quos <- rlang::enquos(...)
+  vars <- rlang::list2(...)
+  nm <- names(vars)
+  if (is.null(nm)) {
+    nm <- rep_len("", length(vars))
+  }
+  mapply(function(q, nm, val) {
+    # Infer name, if possible
+    if (nm == "") {
+      tryCatch({
+        nm <- rlang::as_name(q)
+      }, error = function(e) {
+        code <- paste(collapse = "\n", deparse(rlang::f_rhs(q)))
+        stop("ojs_define() could not create a name for the argument: ", code)
+      })
+    }
+    .session$output[[nm]] <- val
+    outputOptions(.session$output, nm, suspendWhenHidden = FALSE)
+    .session$sendCustomMessage("ojs-export", list(name = nm))
+    NULL
+  }, quos, nm, vars, SIMPLIFY = FALSE, USE.NAMES = FALSE)
+  invisible()
+}
+</script>
+</p>
+<!--html_preserve-->
+<script type="application/shiny-prerendered" data-context="dependencies">
+{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ionrangeslider-javascript"]},{"type":"character","attributes":{},"value":["2.3.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["www/shared/ionrangeslider"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["js/ion.rangeSlider.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["shiny"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["1.8.0"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["strftime"]},{"type":"character","attributes":{},"value":["0.9.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["www/shared/strftime"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["strftime-min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["shiny"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["1.8.0"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ionrangeslider-css"]},{"type":"character","attributes":{},"value":["2.3.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["www/shared/ionrangeslider"]}]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["css/ion.rangeSlider.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["shiny"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["1.8.0"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ionrangeslider-javascript"]},{"type":"character","attributes":{},"value":["2.3.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["www/shared/ionrangeslider"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["js/ion.rangeSlider.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["shiny"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["1.8.0"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["strftime"]},{"type":"character","attributes":{},"value":["0.9.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["www/shared/strftime"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["strftime-min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["shiny"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["1.8.0"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ionrangeslider-css"]},{"type":"character","attributes":{},"value":["2.3.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["www/shared/ionrangeslider"]}]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["css/ion.rangeSlider.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["shiny"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["1.8.0"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ionrangeslider-javascript"]},{"type":"character","attributes":{},"value":["2.3.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["www/shared/ionrangeslider"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["js/ion.rangeSlider.min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["shiny"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["1.8.0"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["strftime"]},{"type":"character","attributes":{},"value":["0.9.2"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["www/shared/strftime"]}]},{"type":"NULL"},{"type":"character","attributes":{},"value":["strftime-min.js"]},{"type":"NULL"},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["shiny"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["1.8.0"]}]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","version","src","meta","script","stylesheet","head","attachment","package","all_files","pkgVersion"]},"class":{"type":"character","attributes":{},"value":["html_dependency"]}},"value":[{"type":"character","attributes":{},"value":["ionrangeslider-css"]},{"type":"character","attributes":{},"value":["2.3.1"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["file"]}},"value":[{"type":"character","attributes":{},"value":["www/shared/ionrangeslider"]}]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["css/ion.rangeSlider.css"]},{"type":"NULL"},{"type":"NULL"},{"type":"character","attributes":{},"value":["shiny"]},{"type":"logical","attributes":{},"value":[true]},{"type":"character","attributes":{},"value":["1.8.0"]}]}]}
+</script>
+<!--/html_preserve-->
+<!--html_preserve-->
+
+<script type="application/shiny-prerendered" data-context="execution_dependencies">
+{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages","version"]},"class":{"type":"character","attributes":{},"value":["data.frame"]},"row.names":{"type":"integer","attributes":{},"value":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57]}},"value":[{"type":"character","attributes":{},"value":["base","bslib","cachem","cli","colorspace","compiler","cowplot","datasets","digest","dplyr","ellipsis","evaluate","fansi","fastmap","generics","ggplot2","glue","graphics","grDevices","grid","gtable","htmltools","htmlwidgets","httpuv","jquerylib","jsonlite","knitr","later","lifecycle","magrittr","memoise","methods","mime","munsell","pillar","pkgconfig","promises","R6","RColorBrewer","Rcpp","rlang","rmarkdown","rstudioapi","sass","scales","shiny","stats","tibble","tidyselect","tools","utf8","utils","vctrs","withr","xfun","xtable","yaml"]},{"type":"character","attributes":{},"value":["4.3.2","0.6.1","1.0.8","3.6.2","2.1-0","4.3.2","1.1.3","4.3.2","0.6.34","1.1.4","0.3.2","0.23","1.0.6","1.1.1","0.1.3","3.4.4","1.7.0","4.3.2","4.3.2","4.3.2","0.3.4","0.5.7","1.6.4","1.6.14","0.1.4","1.8.8","1.45","1.3.2","1.0.4","2.0.3","2.0.1","4.3.2","0.12","0.5.0","1.9.0","2.0.3","1.2.1","2.5.1","1.1-3","1.0.12","1.1.3","2.25","0.15.0","0.4.8","1.3.0","1.8.0","4.3.2","3.2.1","1.2.0","4.3.2","1.2.4","4.3.2","0.6.5","3.0.0","0.41","1.8-4","2.3.8"]}]}]}
+</script>
+<!--/html_preserve-->
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
