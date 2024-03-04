@@ -14,9 +14,6 @@ library(ggplot2)
 library(RColorBrewer)
 library(cowplot)
 theme_set(theme_cowplot())
-
-# build shiny app with shinylive (within the root directory)
-# shinylive::export('docs/multiple-comparisons', 'docs/multiple-comparisons/site')
 ```
 
 There are five general considerations that should be made when planning an experiment:
@@ -166,4 +163,4 @@ The default values let us explore the scenario where we want to explore many hyp
 Reset the defaults and set the range of effect sizes to [1.5, 2.5] and the sample size range maximum to 50. If the exposure or disease we are studying has a small to moderate effect and we are limited to a moderate sample size, we would not have much power to detect the analytes that are actually modified by the exposure. What if we were to focus on a small number of hypotheses? How small would the number of hypotheses need to be to achieve at least 80% power? Some large changes in the number of hypotheses (say 7,000 to 5,000) don't have much effect on power in this scenario, but a much smaller change at the lower end of the spectrum (say 1 to 50) has a large effect on power.
 :::
 
-<!-- Put power app here -->
+<iframe src="https://idss-niaid.github.io/CHI-power/multiple-comparisons/site/" title="Power Analysis" height="800" width="800"></iframe>
