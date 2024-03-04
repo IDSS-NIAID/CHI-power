@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Power Considerations</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="PowerConsiderations_files/libs/clipboard/clipboard.min.js"></script>
+<script src="PowerConsiderations_files/libs/quarto-html/quarto.js"></script>
+<script src="PowerConsiderations_files/libs/quarto-html/popper.min.js"></script>
+<script src="PowerConsiderations_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="PowerConsiderations_files/libs/quarto-html/anchor.min.js"></script>
+<link href="PowerConsiderations_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="PowerConsiderations_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="PowerConsiderations_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="PowerConsiderations_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="PowerConsiderations_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Power Considerations</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>There are five general considerations that should be made when planning an experiment:</p>
+<ul>
+<li><a href="#sec-hypothesis">Hypothesis</a></li>
+<li><a href="#sec-significance-level-power">Significance level and Power</a></li>
+<li><a href="#sec-effect-size-variability">Effect size and Variability</a></li>
+<li><a href="#sec-data-statistical-analysis">Data to be collected and statistical analysis</a></li>
+<li><a href="#sec-sample-size">Sample size</a></li>
+</ul>
+<p>A discussion of these considerations is followed by a few <a href="#sec-examples">examples</a> that apply these considerations to the design of experiments.</p>
+<section id="sec-hypothesis" class="level2">
+<h2 class="anchored" data-anchor-id="sec-hypothesis">Hypothesis</h2>
+<p>The first and most important step in planning an experiment is to define the hypothesis. The hypothesis is a statement that can be statistically tested and is usually formed using a counterfactual. A clear hypothesis is essential for the design of the experiment and the accompanying power analysis, as it will guide sample selection, data collection, and the statistical analysis.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Counterfactual
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A counterfactual is a statement that describes what would have happened in the absence of a specific event or exposure. It is a fundamental concept in the design and analysis of experiments, as it allows us to compare what actually happened to what would have happened in the absence of the event or exposure. In other words, proper experimental design allows us to compare the observed outcome to the counterfactual outcome.</p>
+</div>
+</div>
+<p>Some examples of hypotheses include:</p>
+<ul>
+<li><p><em>Cell death increases with exposure to X.</em> In this case, the counterfactual is not explicitly stated. Rather, it is inferred that cell death would not increase in the absence of <em>X</em>. This hypothesis is easily tested by splitting a population of cells into two groups and exposing one group to <em>X</em>. We would then compare the mean cell death in the group exposed to <em>X</em> to the mean cell death in the group that was not exposed to <em>X</em>.</p></li>
+<li><p><em>The mean concentration of analyte, A, is increased in individuals with disease, D.</em> In this case, the counterfactual consists of the cases in a world where they hadn’t been exposed to disease, <em>D</em>. In other words, if they hadn’t been exposed to <em>D</em>, the mean concentration of analyte, <em>A</em>, would have remained at a lower level. While we will never be able to observe an individual in the counterfactual state (because it never happened), this hypothesis can be tested by comparing the mean concentration of analyte, <em>A</em>, in individuals with <em>D</em>, to the mean concentration of <em>A</em> in a control population of individuals without <em>D</em>. Ideally, the control population should be chosen to be as similar as possible to the population of individuals with <em>D</em>, except for the presence of <em>D</em>.</p></li>
+</ul>
+</section>
+<section id="sec-significance-level-power" class="level2">
+<h2 class="anchored" data-anchor-id="sec-significance-level-power">Significance level and Power</h2>
+<p>Significance level and power can be thought of in terms of errors. There are two types of errors that can be made in hypothesis testing:</p>
+<ol type="1">
+<li>Type I error: Rejecting the null hypothesis when it is true. This is controlled by the significance level, α.</li>
+<li>Type II error: Failing to reject the null hypothesis when it is false. This is controlled by the power, 1 - β.</li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Table 1. Type I and Type II errors. The significance level, α, controls the Type I error rate, while the power, 1 - β, controls the Type II error rate.</caption>
+<colgroup>
+<col style="width: 28%">
+<col style="width: 35%">
+<col style="width: 36%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Significant</th>
+<th style="text-align: left;">Not Significant</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Biologically Relevant</td>
+<td style="text-align: left;">True Positive</td>
+<td style="text-align: left;">False Negative (Type II error)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Biologically Irrelevant</td>
+<td style="text-align: left;">False Positive (Type I error)</td>
+<td style="text-align: left;">True Negative</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Power
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Statistical power is a function of the significance level, the effect size, the variability in the data, and the sample size. It is the probability of rejecting the null hypothesis when it is false. In other words, it can be thought of as the probability of correctly identifying a true effect given the biology and experimental design (assuming you know the true effect size and variability of the population you are sampling).</p>
+</div>
+</div>
+<section id="number-of-hypotheses" class="level3">
+<h3 class="anchored" data-anchor-id="number-of-hypotheses">Number of hypotheses</h3>
+<p>The number of hypothesis tests you run will affect the significance level and power. The more hypothesis tests you run, the more likely you are to make a Type I error. This is known as the multiple comparisons problem. There are several methods for controlling the Type I error rate when running multiple hypothesis tests, such as the Bonferroni correction. These methods control the family-wise error rate, which is the probability of making at least one Type I error when running multiple hypothesis tests. For example:</p>
+<ul>
+<li><em>Your favorite gene is differentially expressed in response to treatment A.</em> This is a focuses hypothesis and would require one hypothesis test. The family-wise error rate will be the same as the significance level, α.</li>
+<li><em>What genes are differentially expressed in response to treatment A?</em> This is typical of a hypothesis generating study and would require multiple hypothesis tests. The family-wise error rate will be significantly higher than the significance level, α, and will need to be controlled using a multiple comparisons correction.</li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Limiting the number of hypothesis tests you run is a good way to control the family-wise error rate and increase power. This can be done by focusing on a single hypothesis or perhaps a small number of related hypotheses. For example, focusing on a specific pathway or family of pathways can result in much higher power than a hypothesis generating study that tests 20,000 individual genes.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="sec-effect-size-variability" class="level2">
+<h2 class="anchored" data-anchor-id="sec-effect-size-variability">Effect size and Variability</h2>
+<p>Effect size and variability are inherent in the biological systems we study.</p>
+<p>Effect size is the magnitude of the difference between the observed population and the counterfactual population. In practice this is the true change that results from the exposure we are studying. In terms of our example hypotheses above, this would be the change in proportion of cells that die after exposure to <em>X</em>, compared to cells not exposed to <em>X</em>, or the change in mean concentration of <em>A</em> as a result of exposure to <em>D</em>.</p>
+<p>Variability is the spread of the data, usually measured by the standard deviation of the population. In the context of our first hypothesis above, this gives us a measure of how different our observed proportion of cells will survive from one assay to the next. For example, if the true effect size is a rate of 20% cell death and we expose batches of 100 cells to <em>X</em>, we won’t always observe 80 surviving cells. If the variability is low, then we’ll see something close to 80 surviving cells from one assay to the next, perhaps ranging between 75 and 85 across many assays. If the variability is high, however, we will see more variable results, perhaps ranging between 50 and 100 surviving cells over many assays.</p>
+<p>Estimates for effect size and variability can be obtained from the literature, pilot studies, or historical data. If these are not available, then the sample size will need to be large enough to detect a biologically relevant effect size with a reasonable degree of variability.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Effect size and variability stem from the biology, but there are still ways to increase power by reducing variability or increasing the effect size. For example:</p>
+<ul>
+<li>Variability can be reduced by using a more precise assay or by careful selection of samples (e.g.&nbsp;matched cases and controls)</li>
+<li>Effect size by sampling the extremes of the population or by using a more potent treatment.</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="sec-data-statistical-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="sec-data-statistical-analysis">Data to be collected and statistical analysis</h2>
+<p>The data to be collected and the statistical analysis used to test the hypothesis will depend on the hypothesis being tested. For example, in the case of the hypothesis, <em>Cell death increases with exposure to X</em>, the data to be collected would be the number of cells that die after exposure to <em>X</em> and the number of cells that die without exposure to <em>X</em>.</p>
+<p>The statistical analysis used to test the hypothesis will depend on the type of data collected. For example, if the data is continuous (e.g.&nbsp;concentration of a protein), then a t-test could be used. Care should be taken to collect the data that will be needed to complete the desired statistical analysis.</p>
+</section>
+<section id="sec-sample-size" class="level2">
+<h2 class="anchored" data-anchor-id="sec-sample-size">Sample size</h2>
+<p>The sample size is critical in hypothesis testing, in that it affects the standard error of the statistics used to perform the statistical test. The larger the sample size, the smaller the standard error and the more precise the estimate of the effect size. A larger sample will increase the power of the test. The sample size can be calculated using a power analysis. Power analysis is a method for determining the sample size needed to detect an effect of a given size with a given degree of variability and significance level.</p>
+<p>The sample size can also be determined by the resources available. For example, if the resources available only allow for a small sample size, then the effect size will need to be large and/or the variability will need to be small in order to detect a significant effect. If the resources available allow for a large sample size, then the effect size can be smaller and the variability greater while still being able to detect a significant effect.</p>
+</section>
+<section id="sec-examples" class="level2">
+<h2 class="anchored" data-anchor-id="sec-examples">Examples</h2>
+<section id="example-1-visually-exploring-power" class="level3">
+<h3 class="anchored" data-anchor-id="example-1-visually-exploring-power">Example 1: Visually exploring power</h3>
+<p>Given the hypothesis, <em>Cell death increases with exposure to X</em>, we will analyze the effect of these factors on power.</p>
+<ul>
+<li>Significance level, α: The significance level is the probability of making a Type I error. It is the probability of rejecting the null hypothesis when it is true. α is usually set at 0.05, but can be set to any value between 0 and 1. The smaller the significance level, the smaller the probability of making a Type I error, but the larger the probability of making a Type II error.</li>
+<li>Cell death rates (effect size): In the context of our experiment, the effect size is the magnitude of the difference between the effect of <em>X</em> on cell death. It is the biological difference between cells exposed to <em>X</em> and those same cells that were counterfactually not exposed to <em>X</em>. It is the expected difference in cell death rates between the exposed and unexposed groups. Set the left slider to the effect size of the unexposed group and the right slider to the effect size of the exposed group. The difference between the two sliders is the effect size.</li>
+<li>Variability: The variability in our experiment is a measure of the standard deviation of the observed proportion of cells that die over many assays. We will assume both the exposed and unexposed groups have the same variability. In this example, the variability can be decreased by using a more precise assay (perhaps by including more cells in each assay).</li>
+<li>Sample size (per group): In the context of our hypothesis, the statistics we are calculating are the observed difference in the proportion of cell death in exposed and in unexposed cells. The more assays we run (the sample size), the smaller the standard error of our statistics and the larger the power.</li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Low variability, low sample size
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The default values above let us explore the scenario where the variability is low (0.1), and the sample size is low (5). We see the distribution of cell death rates and the distribution of cell death rate statistics. If the assumptions we have made hold true, this results in 61% power to detect the effect size of 0.2. How many samples would we need to achieve at least 80% power?</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+High variability, larger sample size
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>What if the variability is high (0.5)? This assumes that the variability of our assay is high. We can balance this by increasing the sample size. What sample size would we need in this case to achieve at least 80% power?</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+High variability, larger effect size
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>In the case where assay variability is high (0.5), and the sample size is low (5), we may be able increase the effect size by increasing the dose of the exposure. What effect size would we need to achieve at least 80% power?</p>
+</div>
+</div>
+</div>
+<iframe src="https://idss-niaid.github.io/CHI-power/power/site/" title="Power Analysis" height="800" width="800">
+</iframe>
+</section>
+<section id="example-2-exploring-the-effect-of-multiple-hypotheses" class="level3">
+<h3 class="anchored" data-anchor-id="example-2-exploring-the-effect-of-multiple-hypotheses">Example 2: Exploring the effect of multiple hypotheses</h3>
+<p>In this example we will explore the effect of multiple hypotheses on the power of an experiment, ranging from a focused hypothesis (e.g.&nbsp;<em>Your favorite gene is differentially expressed in response to treatment A.</em>) to a hypothesis generating experiment (e.g.&nbsp;<em>What genes are differentially expressed in response to treatment A?</em>).</p>
+<ul>
+<li>FW-Error Rate: Rather than setting the Type I error for a single test as in the previous example, we will focus on controlling the family-wise error rate. This is the probability of rejecting any of the many null hypotheses being tested when they are true (i.e.&nbsp;the probability of at least one false positive finding).</li>
+<li>Effect size: In this example, we will allow for a range of effect sizes (fold-change). Three power curves will be presented, covering the range of effect sizes specified.</li>
+<li>SD: Standard deviation of the log fold change. This is a measure of the variability in the log fold change. We will assume that the variability is the same for all genes.</li>
+<li>Sample size: The number of samples in each group. In order to visualize how power changes with sample size, we will look at power as a function of sample size.</li>
+<li>Number of analytes: The number of hypotheses being tested. This can range anywhere from the number of analytes in a 7K SomaScan to all analytes in associated with a particular system a single gene pathway (1).</li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Hypothesis generating with variable effect size
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The default values let us explore the scenario where we want to explore many hypotheses under varying assumptions of effect size. The minimum effect size is small, a 1.5-fold change. The maximum effect size is a fold-change of 4, which is a large effect. We see with this wide range of effect sizes, a wide range of sample sizes would be needed to achieve at least 80% power. What effect does the standard deviation have on power?</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Focused hypothesis vs hypothesis generating
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Reset the defaults and set the range of effect sizes to [1.5, 2.5] and the sample size range maximum to 50. If the exposure or disease we are studying has a small to moderate effect and we are limited to a moderate sample size, we would not have much power to detect the analytes that are actually modified by the exposure. What if we were to focus on a small number of hypotheses? How small would the number of hypotheses need to be to achieve at least 80% power? Some large changes in the number of hypotheses (say 7,000 to 5,000) don’t have much effect on power in this scenario, but a much smaller change at the lower end of the spectrum (say 1 to 50) has a large effect on power.</p>
+</div>
+</div>
+</div>
+<!-- Put power app here -->
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

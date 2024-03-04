@@ -1,7 +1,6 @@
 ---
 title: "Power Considerations"
 format: html
-server: shiny
 execute:
   echo: false
 ---
@@ -16,7 +15,8 @@ library(RColorBrewer)
 library(cowplot)
 theme_set(theme_cowplot())
 
-source('PowerConsiderations.R')
+# build shiny app with shinylive (within the root directory)
+# shinylive::export('docs/multiple-comparisons', 'docs/multiple-comparisons/site')
 ```
 
 There are five general considerations that should be made when planning an experiment:
@@ -142,48 +142,7 @@ What if the variability is high (0.5)? This assumes that the variability of our 
 In the case where assay variability is high (0.5), and the sample size is low (5), we may be able increase the effect size by increasing the dose of the exposure. What effect size would we need to achieve at least 80% power?
 :::
 
-```{r}
-#| panel: sidebar
-# parameters for the illustration
-sliderInput('typeI_error',                     'Significance level',        0.05 , min = 0.001, max = 0.1) # significance level
-sliderInput(          'p', 'Cell death rates (unexposed / exposed)', c(0.2, 0.4 ), min = 0    , max = 1  ) # effect size
-sliderInput('variability',                            'Variability',        0.1  , min = 0    , max = 1  ) # variability
-numericInput(         'n',                            'Sample size',        5    , min = 2               ) # sample size
-```
-
-```{r}
-#| panel: fill
-plotOutput('cell_death_rates')
-plotOutput('power')
-```
-
-```{r}
-#| context: server
-# distribution of cell death rates
-params_u <- reactive({calc_ab(input$p[1], variability = input$variability)})
-params_e <- reactive({calc_ab(input$p[2], variability = input$variability)})
-
-output$cell_death_rates <- renderPlot(
-  {
-    data.frame(x = c(0.01, 0.99)) |>
-
-      ggplot(aes(x)) +
-      stat_function(fun = dbeta, 
-                    args = list(shape1 = params_u()[1], 
-                                shape2 = params_u()[2]),
-                    color = brewer.pal(3, 'Set1')[2]) +
-      stat_function(fun = dbeta, 
-                    args = list(shape1 = params_e()[1], 
-                                shape2 = params_e()[2]),
-                    color = brewer.pal(3, 'Set1')[1]) +
-  
-      labs(y = '', x = 'Cell death rate', title = 'Distribution of cell death rates (truth / hidden)')
-  })
-
-
-# distribution of cell death rate statistics
-output$power <- renderPlot({plot_beta_stats(input$p[1], params_u(), input$p[2], params_e(), input$n, input$typeI_error)})
-```
+<iframe src="https://idss-niaid.github.io/CHI-power/power/site/" title="Power Analysis" height="800" width="800"></iframe>
 
 
 
@@ -207,50 +166,4 @@ The default values let us explore the scenario where we want to explore many hyp
 Reset the defaults and set the range of effect sizes to [1.5, 2.5] and the sample size range maximum to 50. If the exposure or disease we are studying has a small to moderate effect and we are limited to a moderate sample size, we would not have much power to detect the analytes that are actually modified by the exposure. What if we were to focus on a small number of hypotheses? How small would the number of hypotheses need to be to achieve at least 80% power? Some large changes in the number of hypotheses (say 7,000 to 5,000) don't have much effect on power in this scenario, but a much smaller change at the lower end of the spectrum (say 1 to 50) has a large effect on power.
 :::
 
-```{r}
-#| panel: sidebar
-# parameters for the illustration
-sliderInput('typeI_error',               'FW-α',        0.05, min = 0.001, max =    0.1             ) # significance level
-sliderInput('effect_size',        'Effect size', c(1.5, 4  ), min = 1    , max =    5   , step = 0.5) # effect size
-sliderInput(         'sd',                 'SD',        1.5 , min = 0.1  , max =    3               ) # variability
-sliderInput(    'n_range',  'Sample size range', c(3, 400  ), min = 3    , max =  500               ) # sample size
-sliderInput( 'n_analytes', 'Number of analytes',     7267   , min = 1    , max = 7267               ) # number of analytes
-sliderInput(      'power',              'Power',        0.8 , min = 0.5  , max =    1               ) # line for power
-```
-
-```{r}
-#| panel: fill
-plotOutput('power_multiple')
-```
-
-```{r}
-#| context: server
-
-delta       <- reactive({input$effect_size})
-sd          <- reactive({input$sd         })
-alpha       <- reactive({input$typeI_error})
-power       <- reactive({input$power      })
-n_range     <- reactive({input$n_range    })
-n_analytes  <- reactive({input$n_analytes })
-
-ncurves <- reactive({ifelse(delta()[1] == delta()[2], 1, 3)})
-
-output$power_multiple <- renderPlot({
-      tibble(n     = rep(seq(   n_range()[1] ,    n_range()[2] , 1), ncurves()),
-             delta = rep(seq(log2(delta()[1]), log2(delta()[2]), length.out = ncurves()), each = length(n) / ncurves()),
-             power = power.t.test(n,
-                                  delta,
-                                  sd(),
-                                  alpha() / n_analytes())$power) %>%
-
-        mutate(delta = as.factor(round(2^delta, 1))) %>%
-
-        ggplot(aes(n, power, color = delta, linetype = delta)) +
-        geom_line() +
-        geom_hline(yintercept = power(), linetype = 'dashed') +
-
-        labs(x = 'Sample Size', y = 'Power') +
-        theme_cowplot() +
-        scale_color_brewer(palette = 'Set1')
-    })
-```
+<!-- Put power app here -->
